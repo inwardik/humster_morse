@@ -3,7 +3,8 @@ import time
 from dataclasses import dataclass
 
 
-PAUSE = 0.5
+SIGNAL_DELAY = 0.1
+CHAR_DELAY = 1
 ADB_ADDR = "c:\\adb\\adb.exe"
 
 
@@ -51,13 +52,13 @@ class Hamster:
 
     def __send_dot(self) -> None:
         subprocess.call(f"{ADB_ADDR} shell input tap {self.point.x} {self.point.y}", shell=True)
-        time.sleep(PAUSE)
+        time.sleep(SIGNAL_DELAY)
 
     def __send_dash(self) -> None:
         subprocess.call(f"{ADB_ADDR}  shell input motionevent DOWN {self.point.x} {self.point.y}", shell=True)
         time.sleep(0.2)
         subprocess.call(f"{ADB_ADDR} shell input motionevent UP {self.point.x} {self.point.y}", shell=True)
-        time.sleep(PAUSE)
+        time.sleep(SIGNAL_DELAY)
 
     def execute(self) -> None:
         for letter in self.text:
@@ -68,6 +69,7 @@ class Hamster:
                     self.__send_dot()
                 elif item == '-':
                     self.__send_dash()
+            time.sleep(CHAR_DELAY)
 
 
 if __name__ == '__main__':
